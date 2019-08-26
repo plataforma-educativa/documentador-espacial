@@ -3,6 +3,8 @@ package espacial.documentador;
 import com.sun.javadoc.*;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -11,11 +13,11 @@ public class JavaDoc {
 
     private final RootDoc root;
 
-    private boolean constructorIncluded;
-    private boolean methodIncluded;
+    private final Documentacion documentacion;
 
     private JavaDoc(RootDoc rootDoc) {
 
+        documentacion = new Documentacion("./contratos.html");
         root = rootDoc;
     }
 
@@ -44,10 +46,9 @@ public class JavaDoc {
 
     private void execute() {
 
-        for (ClassDoc clazz : extractClasses()) {
+        documentacion.escribirEncabezado();
 
-            constructorIncluded = false;
-            methodIncluded = false;
+        for (ClassDoc clazz : extractClasses()) {
 
             if (mustInclude(clazz)) {
 
@@ -65,69 +66,38 @@ public class JavaDoc {
                 }
             }
         }
+
+        documentacion.escribirPie();
+        documentacion.terminar();
     }
 
     private void includeType(ClassDoc clazz) {
 
-        include(title1("Tipo"));
-
-        include(code(typeOf(clazz)));
-    }
-
-    private String title1(String value) {
-
-        return "<h3>" + value + "</h3>";
+        documentacion.escribirTipo(typeOf(clazz));
     }
 
     private void includeDescription(ClassDoc clazz) {
 
-        include(title2("Descripción"));
-
-        include(normal(descriptionOf(clazz)));
-    }
-
-    private String title2(String value) {
-
-        return "<h4>" + value +"</h4>";
-    }
-
-    private String normal(String value) {
-
-        return "<p>" + value + "</p>";
+        documentacion.escribirDescripcion(descriptionOf(clazz));
     }
 
     private void includeEnumValues(ClassDoc clazz) {
 
-        include(title2("Valores"));
-        include("<div class=\"row\"><div class=\"six columns\">");
+        List<String> values = new LinkedList<>();
+
         for (FieldDoc field : clazz.fields()) {
 
             if (mustInclude(field)) {
-
-                includeEnumValue(field);
+                values.add(field.name());
             }
         }
-        include("</div><div class=\"six columns\">&nbsp;</div></div>");
+
+        documentacion.escribirValoresEnumerados(values);
     }
 
     private String typeOf(ClassDoc clazz) {
 
         return clazz.simpleTypeName();
-    }
-
-    private String code(String value, Object... params) {
-
-        return "<pre><code>" + String.format(value, params) + "</code></pre>";
-    }
-
-    private String doc(String value, Object... params) {
-
-        return "<li>" + String.format(value, params) + "</li>";
-    }
-
-    private void includeEnumValue(FieldDoc field) {
-
-        include(code(field.name()));
     }
 
     private boolean mustInclude(FieldDoc field) {
@@ -157,16 +127,15 @@ public class JavaDoc {
 
         if (mustInclude(constructor)) {
 
-            if (!constructorIncluded) {
-                constructorIncluded = !constructorIncluded;
-                include(title2("Constructores"));
-            }
+            documentacion.escribirConstructor(format("%s(%s)", nameOf(constructor), paramsOf(constructor)));
 
-            include("<div class=\"row\"><div class=\"one column\">&nbsp;</div><div class=\"eleven columns\">");
-            include(code("%s(%s)", nameOf(constructor), paramsOf(constructor)));
-            include("</div></div>");
             includeContract(constructor);
         }
+    }
+
+    private String format(String format, Object... args) {
+
+        return String.format(format, args);
     }
 
     private boolean mustInclude(ConstructorDoc constructor) {
@@ -188,14 +157,8 @@ public class JavaDoc {
 
         if (mustInclude(method)) {
 
-            if (! methodIncluded) {
-                methodIncluded = !methodIncluded;
-                include(title2("Métodos"));
-            }
+            documentacion.escribirMetodo(format("%s %s(%s)", returnOf(method), nameOf(method), paramsOf(method)));
 
-            include("<div class=\"row\"><div class=\"one column\">&nbsp;</div><div class=\"eleven columns\">");
-            include(code("%s %s(%s)", returnOf(method), nameOf(method), paramsOf(method)));
-            include("</div></div>");
             includeContract(method);
         }
     }
@@ -212,41 +175,41 @@ public class JavaDoc {
 
     private void includeContract(ExecutableMemberDoc executable) {
 
-        include("<div class=\"row\"><div class=\"two columns\">&nbsp;</div><div class=\"ten columns\">");
-        include("<ul>");
         includePre(executable);
         includeParams(executable);
         includePost(executable);
         includeReturn(executable);
-        include("</ul>");
-        include("</div></div>");
     }
 
     private void includePre(ExecutableMemberDoc executable) {
 
         for (Tag tag: executable.tags("pre")) {
-            include(doc("<strong>pre :</strong> %s", valueOf(tag)));
+
+            documentacion.escribirPre(valueOf(tag));
         }
     }
 
     private void includeParams(ExecutableMemberDoc executable) {
 
         for (ParamTag paramTag: executable.paramTags()) {
-            include(doc("parametro %s : %s", paramTag.parameterName(), paramTag.parameterComment()));
+
+            documentacion.escribirParametro(paramTag.parameterName(), paramTag.parameterComment());
         }
     }
 
     private void includePost(ExecutableMemberDoc executable) {
 
         for (Tag tag: executable.tags("post")) {
-            include(doc("<strong>post:</strong> %s", valueOf(tag)));
+
+            documentacion.escribirPost(valueOf(tag));
         }
     }
 
     private void includeReturn(ExecutableMemberDoc executable) {
 
         for (Tag tag: executable.tags("return")) {
-            include(doc("retorno : %s", valueOf(tag)));
+
+            documentacion.escribirRetorno(valueOf(tag));
         }
     }
 
@@ -285,11 +248,6 @@ public class JavaDoc {
     private String unwrap(String value) {
 
         return value.replace('\n', ' ').replaceAll(" +", " ");
-    }
-
-    private void include(String texto, Object... parametros) {
-
-        System.out.printf(texto + "%n", parametros);
     }
 
     public static boolean start(RootDoc root) {
