@@ -50,17 +50,6 @@ class DocumentacionTest {
     }
 
     @Test
-    void escribirParrafo() {
-
-        dadoQueFueCreadaLaDocumentacion();
-
-        documentacion.escribirParrafo("Para describir cada uno ...");
-        documentacion.terminar();
-
-        comprobarQueContiene("<p>Para describir cada uno ...</p>");
-    }
-
-    @Test
     void escribirTipo() {
 
         dadoQueFueCreadaLaDocumentacion();
@@ -68,7 +57,7 @@ class DocumentacionTest {
         documentacion.escribirTipo("TipoEspacial");
         documentacion.terminar();
 
-        comprobarQueContiene("<h3>Tipo</h3><pre><code>TipoEspacial</code></pre>");
+        comprobarQueContiene("<hr></hr>","<h3>Tipo</h3>","<pre><code>TipoEspacial</code></pre>");
     }
 
     @Test
@@ -79,7 +68,7 @@ class DocumentacionTest {
         documentacion.escribirDescripcion("Vehículo espacial que...");
         documentacion.terminar();
 
-        comprobarQueContiene("<h4>Descripción</h4><p>Vehículo espacial que...</p>");
+        comprobarQueContiene("<h4>Descripción</h4>","<p>Vehículo espacial que...</p>");
     }
 
     @Test
