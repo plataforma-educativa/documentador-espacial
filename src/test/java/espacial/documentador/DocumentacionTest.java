@@ -144,8 +144,8 @@ class DocumentacionTest {
         comprobarQueContiene(
                 "<div class=\"row\">",
                 "<div class=\"two columns\">&nbsp;</div>",
-                "<div class=\"one column\"><strong>pre</strong></div>",
-                "<div class=\"nine columns\">fue creada la BatallaEspacial</div>",
+                "<div class=\"two columns\"><strong>pre</strong></div>",
+                "<div class=\"eight columns\">fue creada la BatallaEspacial</div>",
                 "</div>");
     }
 
@@ -160,8 +160,8 @@ class DocumentacionTest {
         comprobarQueContiene(
                 "<div class=\"row\">",
                 "<div class=\"two columns\">&nbsp;</div>",
-                "<div class=\"one column\"><strong>post</strong></div>",
-                "<div class=\"nine columns\">avanza al SUR</div>",
+                "<div class=\"two columns\"><strong>post</strong></div>",
+                "<div class=\"eight columns\">avanza al SUR</div>",
                 "</div>");
     }
 
@@ -176,8 +176,8 @@ class DocumentacionTest {
         comprobarQueContiene(
                 "<div class=\"row\">",
                 "<div class=\"two columns\">&nbsp;</div>",
-                "<div class=\"one column\"><strong>retorno</strong></div>",
-                "<div class=\"nine columns\">porcentaje comprendido entre [0..100]</div>",
+                "<div class=\"two columns\"><strong>return</strong></div>",
+                "<div class=\"eight columns\">porcentaje comprendido entre [0..100]</div>",
                 "</div>");
     }
 
@@ -192,8 +192,8 @@ class DocumentacionTest {
         comprobarQueContiene(
                 "<div class=\"row\">",
                 "<div class=\"two columns\">&nbsp;</div>",
-                "<div class=\"one column\"><strong>&nbsp;</strong></div>",
-                "<div class=\"nine columns\">sustancia: tipifica la carga</div>",
+                "<div class=\"two columns\"><strong>param</strong></div>",
+                "<div class=\"eight columns\">sustancia: tipifica la carga</div>",
                 "</div>");
     }
 

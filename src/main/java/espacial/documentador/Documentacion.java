@@ -75,14 +75,19 @@ public class Documentacion {
 
         inicioFila();
         lineaCon("<div class=\"two columns\">&nbsp;</div>");
-        lineaCon("<div class=\"one column\"><strong>%s</strong></div>", tipo);
-        lineaCon("<div class=\"nine columns\">%s</div>", texto);
+        lineaCon("<div class=\"two columns\">%s</div>", tipo);
+        lineaCon("<div class=\"eight columns\">%s</div>", texto);
         finFila();
     }
 
     private void separador() {
 
         lineaCon("<hr></hr>");
+    }
+
+    private String resaltando(String valor) {
+
+        return String.format("<strong>%s</strong>", valor);
     }
 
     private void inicioPanel() {
@@ -214,22 +219,22 @@ public class Documentacion {
 
     public void escribirPre(String texto) {
 
-        condicionCon("pre", texto);
+        condicionCon(resaltando("pre"), texto);
     }
 
     public void escribirPost(String texto) {
 
-        condicionCon("post", texto);
+        condicionCon(resaltando("post"), texto);
     }
 
     public void escribirRetorno(String texto) {
 
-        condicionCon("retorno", texto);
+        condicionCon(resaltando("return"), texto);
     }
 
     public void escribirParametro(String nombre, String descripcion) {
 
-        condicionCon("&nbsp;", nombre + ": " + descripcion);
+        condicionCon(resaltando("param"), nombre + ": " + descripcion);
     }
 
     public void escribirValoresEnumerados(List<String> valores) {
