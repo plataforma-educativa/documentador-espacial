@@ -36,4 +36,12 @@
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub plataforma-educativa Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/plataforma-educativa/documentador-espacial</url>
+        </repository>
+    </distributionManagement>
+
 </project>
